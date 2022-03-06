@@ -8,6 +8,11 @@ exports.login = (req, res) => {
     res.render(`login`)
 }
 
+// exports.login2 = (req,res) => {
+//     console.log(req.body)
+//     res.send('보임?')
+// }
+
 exports.loginPost = (req, res) => {
     const {userid, userpw} = req.body
     const param = [ userid, userpw ]
