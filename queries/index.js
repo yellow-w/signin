@@ -1,3 +1,3 @@
 exports.SQL = {
-    loginPost : 'SELECT * FROM user WHERE userid = ? AND userpw = ?'
+    signInPost : 'SELECT * FROM user WHERE userid = ? AND userpw = ?'
 }

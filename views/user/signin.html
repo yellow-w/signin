@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script href="text/javascript">
+        document.addEventListener('DOMContentLoaded', init)
+
+        function init() {
+            const Frm = document.querySelector('#signInFrm')
+            const userid = document.querySelector('#userid')
+            const userpw = document.querySelector('#userpw')
+
+            Frm.addEventListener('submit', submitHandler)
+
+            function submitHandler(e) {
+                e.preventDefault()
+
+                const data = {
+                    userid: userid.value,
+                    userpw: userpw.value,
+                }
+                ajax(data)
+            }
+
+            function ajax(item) {
+                const xhr = new XMLHttpRequest()
+                xhr.open('POST', 'http://localhost:3000/user/signin')
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+                xhr.send(`userid=${item['userid']}&userpw=${item['userpw']}`)
+
+                const msg = document.querySelector('#msg')
+
+                xhr.onreadystatechange = () => {
+                    switch (xhr.readyState) {
+                        case 2:
+                            console.log('header_received')
+                            break;
+                        case 3:
+                            console.log('loading')
+                            break;
+                        case 4:
+                            console.log('done', xhr.response)
+                            if (xhr.response == 'signedIn') {
+                                alert('로그인이 완료되었습니다!')
+                                location.href = "http://localhost:3000"
+                            } else {
+                                msg.innerHTML = '로그인 정보를 확인해주세요'
+                                msg.style.color = 'red'
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <form method="post" action="/user/signin" id="signInFrm">
+        <table>
+            <span id="msg"></span>
+            <tr>
+                <td>아이디 : </td>
+                <td><input type="text" name="userid" id="userid"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 : </td>
+                <td><input type="text" name="userpw" id="userpw"></td>
+            </tr>
+        </table>
+        <input type="submit" value="로그인">
+    </form>
+</body>
+
+</html>

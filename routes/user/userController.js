@@ -1,32 +1,39 @@
 const { pool } = require(`../../db`)
 const { SQL } = require(`../../queries`)
 const { createToken } = require(`../../utils/jwt`)
-// const {alertmove} = require(`../../utils/alertmove`)
 
-
-exports.login = (req, res) => {
-    res.render(`login`)
+exports.singUp = (req,res) => {
+    res.render(`user/signup`)
 }
 
-// exports.login2 = (req,res) => {
-//     console.log(req.body)
-//     res.send('보임?')
-// }
+exports.idCheck = (req,res) => {
+    console.log(req.body)
+    const response = JSON.stringify({
+        result : 1
+    })
+    res.send(response)
+}
 
-exports.loginPost = (req, res) => {
+
+exports.signIn = (req, res) => {
+    res.render(`user/signin`)
+}
+
+
+exports.signInPost = (req, res) => {
     const {userid, userpw} = req.body
     const param = [ userid, userpw ]
     try {
         pool.getConnection((err, conn) => {
-            conn.query(SQL.loginPost, param, (error, result) => {
+            conn.query(SQL.signInPost, param, (error, result) => {
                 if(result[0]!= undefined){
                     delete result[0].pw
                     const item = result[0]
                     const token = createToken(item)
                     res.setHeader(`Set-Cookie`,`AccessToken=${token}; httpOnly; secure; path=/;`)
-                    res.render(`index`)
+                    res.send(`signedIn`)
                 } else {
-                    res.send(`로그인 정보를 확인해주세요`)
+                    res.send(`notsignedIn`)
                 }    
                 conn.release()
             })
